@@ -29,6 +29,8 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.static(__dirname +'/public'));
+
 // app.use('/', (req, res, next) => {    
 //     if (req.url === "/about" || req.url === "/home") {
 //         next();
@@ -40,8 +42,6 @@ app.use((req, res, next) => {
 //     }
 // }); 
 
-app.use(express.static(__dirname +'/public'));
-
 app.get('/', (req, res)=>{    
     res.render('home.hbs', {
         pageTitle: "Home Page",        
@@ -50,11 +50,18 @@ app.get('/', (req, res)=>{
     console.log('home page');
 });
 
+app.get('/projects', (req, res) => {    
+    res.render('projects.hbs', {
+        pageTitle: "Projects Portfolio Page"        
+    });
+});
+
 app.get('/about', (req, res) => {    
     res.render('about.hbs', {
         pageTitle: "HandleBar Dynamic Page"        
     });
 });
+
 
 app.get('/bad', (req, res) => {
     res.send({
