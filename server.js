@@ -1,16 +1,23 @@
-// import { dirname } from 'path';
-
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
 
-const port = process.env.PORT || 3005;
+// const port = process.env.PORT || 3005;
+const port =  3005;
 
 var app = express();
 
+
 hbs.registerPartials('./views/partials');
 app.set('view engine', 'hbs');
-app.use(express.static(__dirname +'/public'));
+
+hbs.registerHelper('getCurrentYear', ()=>{
+    return new Date().getFullYear();
+});
+
+hbs.registerHelper('screamIt', (inputMsg)=>{
+    return inputMsg.toUpperCase();
+});
 
 app.use((req, res, next) => {
     var now = new Date().toString();
@@ -22,42 +29,30 @@ app.use((req, res, next) => {
     next();
 });
 
-hbs.registerHelper('getCurrentYear', ()=>{
-    return new Date().getFullYear();
-});
+// app.use('/', (req, res, next) => {    
+//     if (req.url === "/about" || req.url === "/home") {
+//         next();
+//     } else {
+//         res.render('maintenance.hbs', {
+//             pageTitle: "Maintenance Page",
+//             welcomeMessage: "Site is being updated"
+//         });
+//     }
+// }); 
 
-app.use((req, res, next) => {
-    res.render('maintenance.hbs', {
-        pageTitle: "Maintenance Page",
-        welcomeMessage: "Site is being updated"
-    });
-    next();
-});
+app.use(express.static(__dirname +'/public'));
 
-
-hbs.registerHelper('screamIt', (inputMsg)=>{
-    return inputMsg.toUpperCase();
-});
-
-app.get('/', (req, res)=>{
-    // res.send("<h1>Hello Express</h1>");
-    // res.send({
-    //     name: "Rikki",
-    //     age: 2
-    // });
+app.get('/', (req, res)=>{    
     res.render('home.hbs', {
-        pageTitle: "Home Page",
-        // year: new Date().getFullYear(),
+        pageTitle: "Home Page",        
         welcomeMessage: "Welcome to my new website"
     });
+    console.log('home page');
 });
 
-app.get('/about', (req, res) => {
-    // res.send('About Page');
-    // res.render('about.hbs');
+app.get('/about', (req, res) => {    
     res.render('about.hbs', {
-        pageTitle: "HandleBar Dynamic Page"
-        // year: new Date().getFullYear()
+        pageTitle: "HandleBar Dynamic Page"        
     });
 });
 
@@ -70,4 +65,3 @@ app.get('/bad', (req, res) => {
 app.listen(port, () => {
     console.log(`server is up on ${port}`);
 });
-
